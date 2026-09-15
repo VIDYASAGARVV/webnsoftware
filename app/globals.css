@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --bg: #f6f7f4;
+  --surface: #ffffff;
+  --text: #101312;
+  --muted: #68706d;
+  --line: #dfe3df;
+  --accent: #b7ff2a;
+  --dark: #101411;
+  --max: 1180px;
+  
+  /* 💫 మోషన్ గ్రాఫిక్స్ కోసం స్మూత్ టైమింగ్స్ */
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s ease;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  
+  /* 🪄 వెబ్‌సైట్ ఓపెన్ అవ్వగానే వచ్చే స్మూత్ ఫేడ్-ఇన్ యానిమేషన్ */
+  animation: fadeInSite 0.8s var(--transition-smooth);
+}
+a { color: inherit; text-decoration: none; }
+.container { width: min(calc(100% - 40px), var(--max)); margin: 0 auto; }
+
+/* 🌟 వెబ్‌సైట్ ఎంట్రీ యానిమేషన్ కీఫ్రేమ్స్ */
+@keyframes fadeInSite {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(246,247,244,.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  transition: var(--transition-fast);
+}
+.nav-wrap { min-height: 76px; display:flex; align-items:center; gap:28px; }
+.brand { font-size: 20px; font-weight: 800; letter-spacing:-.8px; margin-right:auto; }
+.desktop-nav { display:flex; gap:20px; font-size:13px; color:#515955; }
+
+/* లింక్స్ పై హోవర్ చేసినప్పుడు స్మూత్ చేంజ్ */
+.desktop-nav a { transition: var(--transition-fast); }
+.desktop-nav a:hover { color:var(--text); transform: translateY(-1px); }
+
+.nav-cta, .button, .contact-form button {
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--text); background:var(--text); color:#fff;
+  padding:12px 18px; border-radius:999px; font-weight:700; font-size:13px;
+  cursor: pointer;
+  transition: var(--transition-smooth); /* 👈 బటన్ మోషన్ */
+}
+/* 🔘 బッティング హోవర్ మోషన్ ఎఫెక్ట్ */
+.nav-cta:hover, .button:hover, .contact-form button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(16, 19, 18, 0.15);
+}
+
+.hero { padding: 105px 0 100px; border-bottom:1px solid var(--line); }
+.hero-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap:70px; align-items:center; }
+.eyebrow { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 16px; }
+.hero h1 { font-size:clamp(58px, 8vw, 104px); line-height:.88; letter-spacing:-6px; margin:0; max-width:800px; }
+.hero h1 span { display:block; -webkit-text-stroke:1px var(--text); color:transparent; }
+.hero-copy { color:var(--muted); max-width:570px; font-size:18px; line-height:1.65; margin:28px 0; }
+.hero-actions { display:flex; gap:12px; }
+.button.ghost { background:transparent; color:var(--text); }
+.button.ghost:hover { background: rgba(16, 19, 18, 0.05); }
+
+/* 🗺️ హీరో వైర్‌ఫ్రేమ్ కార్డ్ మోషన్ */
+.hero-wireframe { 
+  min-height:370px; 
+  border:1px solid var(--text); 
+  border-radius:28px; 
+  padding:30px; 
+  transform:rotate(2deg); 
+  background:#fff;
+  transition: var(--transition-smooth);
+  animation: floatWireframe 4s ease-in-out infinite alternate; /* 👈 గాల్లో తేలినట్లు ఉండే మోషన్ */
+}
+.hero-wireframe:hover {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* 🎈 వైర్‌ఫ్రేమ్ ఫ్లోటింగ్ ఎఫెక్ట్ */
+@keyframes floatWireframe {
+  from { transform: rotate(2deg) translateY(0px); }
+  to { transform: rotate(2deg) translateY(-12px); }
+}
+
+.wire-line { height:15px; background:#e7ebe5; border-radius:20px; margin-bottom:18px; }
+.wire-line.long { width:82%; height:30px; }
+.wire-line.medium { width:62%; }
+.wire-line.short { width:45%; }
+.wire-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:45px 0; }
+.wire-cards div { aspect-ratio:1; border:1px solid #cfd5cf; border-radius:18px; transition: var(--transition-fast); }
+.wire-cards div:hover { background: #f0f3ef; }
+
+.section { padding:100px 0; }
+.dark-section { background:var(--dark); color:#fff; }
+.dark-section .muted { color:#aab2ad; }
+/* .section-heading { max-width:760px; margin-bottom:45px; }
+.section-heading h2, .contact-section h2 { font-size:clamp(38px,5vw,64px); letter-spacing:-3px; line-height:.98; margin:0 0 18px; }
+.muted { color:var(--muted); line-height:1.7; } */
+.section-heading { 
+  max-width: 760px; 
+  margin-bottom: 45px; 
+}
+
+.section-heading h2, 
+.contact-section h2 { 
+  font-size: clamp(38px, 5vw, 64px); 
+  letter-spacing: -3px; 
+  line-height: .98; 
+  margin: 0 0 18px; 
+}
+
+.section-heading .eyebrow {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  color: #0070f3; /* మీ థీమ్ కలర్ మార్చుకోవచ్చు */
+}
+
+.muted { 
+  color: var(--muted, #666); 
+  line-height: 1.7; 
+}
+
+.grid { display:grid; gap:18px; }
+.services-grid { grid-template-columns:repeat(4,1fr); }
+
+/* 💼 సర్వీసెస్ & మార్కెటింగ్ కార్డ్స్ మోషన్ ఎఫెక్ట్ */
+.card { 
+  background:var(--surface); 
+  border:1px solid var(--line); 
+  border-radius:22px; 
+  padding:28px;
+  transition: var(--transition-smooth); /* 👈 స్మూత్ మోషన్ */
+}
+.card:hover {
+  transform: translateY(-8px); /* పైకి లేచినట్లు వచ్చే మోషన్ */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+  border-color: var(--text);
+}
+.service-card { min-height:280px; display:flex; flex-direction:column; }
+.number { font-size:12px; font-weight:800; color:#7a827e; transition: var(--transition-fast); }
+.card:hover .number { color: var(--text); transform: scale(1.1); } /* నంబర్ జూమ్ మోషన్ */
+.card h3 { font-size:23px; letter-spacing:-1px; margin:55px 0 10px; }
+.card p { color:var(--muted); line-height:1.6; margin:0; }
+.text-link { margin-top:auto; padding-top:25px; font-size:13px; font-weight:700; }
+
+.video-grid { grid-template-columns:repeat(3,1fr); }
+
+/* 🎬 వీడియో కార్డ్ మోషన్ గ్రాఫిక్స్ */
+.video-card { 
+  border:1px solid #303832; 
+  border-radius:22px; 
+  overflow:hidden; 
+  background:#171c18; 
+  transition: var(--transition-smooth);
+}
+.video-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  border-color: var(--accent); /* హోవర్ చేసినప్పుడు గ్రీన్ బోర్డర్ */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+.video-preview { 
+  aspect-ratio:16/10; 
+  position:relative; 
+  display:grid; 
+  place-items:center; 
+  background:linear-gradient(135deg,#2b332c,#0d100e); 
+  overflow: hidden;
+}
+/* ప్లే బటన్ పల్స్ (Pulse) మోషన్ */
+.play { 
+  width:58px; 
+  height:58px; 
+  border:1px solid #fff; 
+  border-radius:50%; 
+  display:grid; 
+  place-items:center; 
+  padding-left:3px; 
+  transition: var(--transition-smooth);
+}
+.video-card:hover .play {
+  background: var(--accent);
+  color: var(--dark);
+  border-color: var(--accent);
+  transform: scale(1.15); /* బటన్ కొంచెం పెద్దదవుతుంది */
+}
+.video-category,.duration { position:absolute; top:16px; font-size:10px; text-transform:uppercase; letter-spacing:1px; transition: var(--transition-smooth); }
+.video-category { left:16px; }
+.duration { right:16px; }
+.video-card:hover .video-category { transform: translateX(3px); }
+.video-card:hover .duration { transform: translateX(-3px); }
+
+.video-body { padding:23px; }
+.video-body h3 { margin:0 0 8px; }
+.video-body p { color:#aab2ad; line-height:1.6; font-size:14px; }
+.marketing-grid { grid-template-columns:repeat(3,1fr); }
+.marketing-card h3 { margin:0 0 12px; }
+.marketing-card ul { padding-left:18px; line-height:2; color:var(--muted); }
+/* 📈 మార్కెటింగ్ లిస్ట్ హోవర్ మోషన్ */
+.marketing-card ul li { transition: var(--transition-fast); }
+.marketing-card:hover ul li { color: var(--text); }
+
+.about-section { border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.about-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:80px; align-items:start; }
+.about-panel { border:1px solid var(--text); border-radius:22px; padding:26px; background:#fff; transition: var(--transition-smooth); }
+.about-panel:hover { box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+.mini-label { font-size:10px; font-weight:800; letter-spacing:1.6px; }
+.stat-row { display:flex; gap:18px; align-items:center; padding:25px 0; border-bottom:1px solid var(--line); transition: var(--transition-fast); }
+.stat-row:hover { padding-left:8px; background: rgba(183, 255, 42, 0.05); } /* స్టాట్ రో మోషన్ */
+.stat-row:last-child { border-bottom:0; }
+.stat-row strong { font-size:13px; color:#777f7a; }
+
+/* ✉️ కాంటాక్ట్ ఫామ్ ఇన్‌పుట్ మోషన్ */
+.contact-section { background:var(--accent); }
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.contact-info { display:grid; gap:8px; margin-top:30px; font-weight:700; }
+.contact-form { display:grid; gap:15px; background:#fff; padding:30px; border-radius:22px; border:1px solid var(--text); transition: var(--transition-smooth); }
+.contact-form:focus-within { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+.contact-form label { display:grid; gap:7px; font-size:12px; font-weight:800; }
+.contact-form input, .contact-form textarea { 
+  width:100%; 
+  border:1px solid var(--line); 
+  border-radius:12px; 
+  padding:13px; 
+  font:inherit; 
+  resize:vertical; 
+  transition: var(--transition-fast); /* ఇన్‌పుట్ యాక్టివ్ మోషన్ */
+}
+.contact-form input:focus, .contact-form textarea:focus {
+  border-color: var(--text);
+  outline: none;
+  background: #fdfdfd;
+}
+.contact-form button { cursor:pointer; border-radius:12px; }
+.footer { padding:28px 0; background:var(--dark); color:#fff; font-size:12px; }
+.footer-inner { display:flex; justify-content:space-between; }
+
+/* 📱 మొబైల్ రెస్పాన్సివ్ మోషన్స్ */
+@media (max-width: 900px) {
+  .desktop-nav { display:none; }
+  .hero-grid, .about-grid, .contact-grid { grid-template-columns:1fr; gap:40px; }
+  .services-grid { grid-template-columns:repeat(2,1fr); }
+  .video-grid, .marketing-grid { grid-template-columns:1fr; }
+  .hero-wireframe { animation: none; transform: none; } /* మొబైల్ లో ఫ్లోటింగ్ ఆపాం */
+  .hero-wireframe:hover { transform: none; }
+}
+@media (max-width: 560px) {
+  .container { width:min(calc(100% - 28px), var(--max)); }
+  .nav-wrap { min-height:64px; }
+  .nav-cta { display:none; }
+  .hero { padding:75px 0; }
+  .hero h1 { letter-spacing:-4px; }
+  .hero-actions { flex-direction:column; align-items:stretch; }
+  .section { padding:70px 0; }
+  .services-grid { grid-template-columns:1fr; }
+  .footer-inner { flex-direction:column; gap:10px; }
+  .card:hover, .video-card:hover { transform: translateY(-4px); } /* మొబైల్ కి తగ్గట్లు చిన్న మోషన్ */
+}
