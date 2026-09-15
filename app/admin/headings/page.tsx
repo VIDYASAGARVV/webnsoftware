@@ -9,6 +9,7 @@ interface HeadingRecord {
   eyebrow: string;
   title: string;
   text: string;
+  mediaUrl:string;
 }
 
 export default function AdminHeadingsPage() {
@@ -125,6 +126,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   formData.append("eyebrow", eyebrow);
   formData.append("title", title);
   formData.append("text", text);
+  formData.append('mediaUrl',mediaUrl);
   
   if (imageFile) {
     formData.append("image", imageFile); // 'image' అనేది బ్యాకెండ్ Multer కి మ్యాచ్ అవ్వాలి
