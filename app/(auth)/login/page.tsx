@@ -12,59 +12,34 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
 
-  //  try {
-  // const res = await fetch('http://localhost:5000/api/auth/login', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ email, password }),
-  // });
+    try {
+      // 🚀 1. మీ అసలైన ఆన్‌లైన్ రెండర్ బ్యాకెండ్ API లింక్‌ను ఇక్కడ పక్కాగా ఇచ్చాము
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL as string) || 'https://webnsoftware-backend.onrender.com/api';
 
-  // // 1. Check if the response is HTML or broken first
-  // if (!res.ok) {
-  //   // If it is an HTML page error, it won't crash your app now
-  //   const errorText = await res.text(); 
-  //   throw new Error(`Server error (${res.status}): Something went wrong.`);
-  // }
+      const res = await fetch(`${apiUrl}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-  try {
-  // 🚀 డైనమిక్ ఎన్విరాన్‌మెంట్ వేరియబుల్‌ని ఇక్కడ డిఫైన్ చేసాము
-  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
+      if (!res.ok) {
+        const errorText = await res.text(); 
+        throw new Error(`Server error (${res.status}): Something went wrong.`);
+      }
+      
+      const data = await res.json();
 
-  // 🚀 హార్డ్‌కోడ్ లింక్ తీసేసి, ${apiUrl} ని చేర్చాము
-  const res = await fetch(`${apiUrl}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify({ name: data.name, role: data.role }));
 
-  // 1. Check if the response is HTML or broken first
-  if (!res.ok) {
-    const errorText = await res.text(); 
-    throw new Error(`Server error (${res.status}): Something went wrong.`);
-  }
-  
-  // మీ మిగిలిన సక్సెస్ లాజిక్ ఇక్కడ వస్తుంది...
-
-
-
-  // 2. Only parse JSON if the response is successful
-  const data = await res.json();
-
-  // Save user session details
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('user', JSON.stringify({ name: data.name, role: data.role }));
-
-  // Conditional Redirect based on role
-  if (data.role === 'admin') {
-    router.push('/admin/dashboard');
-  } else {
-    router.push('/'); 
-  }
-} catch (err: any) {
-  setError(err.message);
-}
-
+      if (data.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/'); 
+      }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
