@@ -12,8 +12,26 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
 
-   try {
-  const res = await fetch('http://localhost:5000/api/auth/login', {
+  //  try {
+  // const res = await fetch('http://localhost:5000/api/auth/login', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ email, password }),
+  // });
+
+  // // 1. Check if the response is HTML or broken first
+  // if (!res.ok) {
+  //   // If it is an HTML page error, it won't crash your app now
+  //   const errorText = await res.text(); 
+  //   throw new Error(`Server error (${res.status}): Something went wrong.`);
+  // }
+
+  try {
+  // 🚀 డైనమిక్ ఎన్విరాన్‌మెంట్ వేరియబుల్‌ని ఇక్కడ డిఫైన్ చేసాము
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+  // 🚀 హార్డ్‌కోడ్ లింక్ తీసేసి, ${apiUrl} ని చేర్చాము
+  const res = await fetch(`${apiUrl}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -21,10 +39,13 @@ export default function LoginPage() {
 
   // 1. Check if the response is HTML or broken first
   if (!res.ok) {
-    // If it is an HTML page error, it won't crash your app now
     const errorText = await res.text(); 
     throw new Error(`Server error (${res.status}): Something went wrong.`);
   }
+  
+  // మీ మిగిలిన సక్సెస్ లాజిక్ ఇక్కడ వస్తుంది...
+
+
 
   // 2. Only parse JSON if the response is successful
   const data = await res.json();
