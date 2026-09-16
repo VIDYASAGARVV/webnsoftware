@@ -28,8 +28,8 @@ export default function LoginPage() {
 
   try {
   // 🚀 డైనమిక్ ఎన్విరాన్‌మెంట్ వేరియబుల్‌ని ఇక్కడ డిఫైన్ చేసాము
-  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://onrender.com';
 
   // 🚀 హార్డ్‌కోడ్ లింక్ తీసేసి, ${apiUrl} ని చేర్చాము
   const res = await fetch(`${apiUrl}/auth/login`, {
