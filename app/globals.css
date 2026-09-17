@@ -3,6 +3,10 @@
 @tailwind utilities;
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+/* 
 :root {
   --bg: #f6f7f4;
   --surface: #ffffff;
@@ -13,7 +17,6 @@
   --dark: #101411;
   --max: 1180px;
   
-  /* 💫 మోషన్ గ్రాఫిక్స్ కోసం స్మూత్ టైమింగ్స్ */
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s ease;
 }
@@ -26,17 +29,15 @@ body {
   color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
   
-  /* 🪄 వెబ్‌సైట్ ఓపెన్ అవ్వగానే వచ్చే స్మూత్ ఫేడ్-ఇన్ యానిమేషన్ */
   animation: fadeInSite 0.8s var(--transition-smooth);
 }
 a { color: inherit; text-decoration: none; }
 .container { width: min(calc(100% - 40px), var(--max)); margin: 0 auto; }
 
-/* 🌟 వెబ్‌సైట్ ఎంట్రీ యానిమేషన్ కీఫ్రేమ్స్ */
 @keyframes fadeInSite {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
-}
+} */
 
 .site-header {
   position: sticky;
@@ -80,10 +81,7 @@ a { color: inherit; text-decoration: none; }
 
 /* 🗺️ హీరో వైర్‌ఫ్రేమ్ కార్డ్ మోషన్ */
 .hero-wireframe { 
-  /* min-height:370px; 
-  border:1px solid var(--text); 
-  border-radius:28px; 
-  padding:30px;  */
+ 
   transform:rotate(2deg); 
   border-radius:38px; 
   background:#fff;

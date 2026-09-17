@@ -1,118 +1,134 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { getWhatsAppUrl } from "../lib/whatsapp";
 
 export default function Footer() {
-  const [siteData, setSiteData] = useState<any>({ brand: "WebnSoftware", tagline: "Digital products & growth solutions" });
-
-  useEffect(() => {
-    async function loadFooterData() {
-      try {
-        const res = await fetch("/api/content");
-        const result = await res.json();
-        if (result.success && result.data) {
-          setSiteData(result.data);
-        }
-      } catch (err) {
-        console.error("Footer data load error:", err);
-      }
-    }
-    loadFooterData();
-  }, []);
-
   return (
-    <footer className="footer" style={{ borderTop: "1px solid #303832", padding: "60px 0 30px", background: "var(--dark)" }}>
-      <div className="container">
-        
-        {/* 🌟 టాప్ సెక్షన్: బ్రాండ్ వివరాలు మరియు లింక్స్ */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "40px", marginBottom: "5px", paddingBottom: "40px", borderBottom: "1px solid #1f2621" }}>
-          
-          {/* ఎడమ వైపు: బ్రాండ్ నేమ్ & ట్యాగ్‌లైన్ */}
-          <div>
-            <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#fff", letterSpacing: "-1px", margin: "0 0 12px 0" }}>
-              {siteData.brand}
-            </h3>
-            <p style={{ color: "#aab2ad", fontSize: "14px", lineHeight: "1.6", maxWidth: "280px", margin: 0 }}>
-              {siteData.tagline || "Digital products, AI videos & growth solutions."}
+    <footer className="border-t border-white/10 bg-black">
+
+      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+
+        <div className="grid gap-10 md:grid-cols-4">
+
+          {/* Brand */}
+          <div className="md:col-span-2">
+
+            <h2 className="text-2xl font-bold">
+              Web
+              <span className="text-blue-400">N</span>
+              Software
+            </h2>
+
+            <p className="mt-4 max-w-md leading-7 text-slate-400">
+              Websites, eCommerce, custom software, AI videos,
+              reels and digital marketing solutions for modern businesses.
             </p>
+
+            <a
+              href={getWhatsAppUrl(
+                "Hi WebNSoftware, I would like to discuss my project."
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex rounded-full bg-green-500 px-6 py-3 text-sm font-semibold"
+            >
+              Start a Conversation →
+            </a>
+
           </div>
 
-          {/* మధ్యలో: క్విక్ నావిగేషన్ లింక్స్ */}
+
+          {/* Services */}
           <div>
-            <h4 style={{ fontSize: "12px", fontWeight: "800", color: "#7a827e", textTransform: "uppercase", letterSpacing: "1.5px", margin: "0 0 16px 0" }}>
-              Navigation
-            </h4>
-            <div style={{ display: "grid", gap: "10px", fontSize: "14px" }}>
-              {["Services", "AI Videos", "Digital Marketing", "About Us", "Contact Us"].map((item) => (
-                <a 
-                  key={item}
-                  href={`#${item.toLowerCase().replace(" ", "-")}`} 
-                  style={{ color: "#aab2ad", transition: "all 0.2s ease" }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent)"}
-                  onMouseLeave={(e) => e.currentTarget.style.color = "#aab2ad"}
-                >
-                  {item}
+
+            <h3 className="font-semibold">
+              Services
+            </h3>
+
+            <ul className="mt-5 space-y-3 text-sm text-slate-400">
+
+              <li>
+                <a href="#services" className="hover:text-white">
+                  Business Websites
                 </a>
-              ))}
-            </div>
+              </li>
+
+              <li>
+                <a href="#services" className="hover:text-white">
+                  eCommerce
+                </a>
+              </li>
+
+              <li>
+                <a href="#services" className="hover:text-white">
+                  Custom Software
+                </a>
+              </li>
+
+              <li>
+                <a href="#ai-videos" className="hover:text-white">
+                  AI Videos
+                </a>
+              </li>
+
+              <li>
+                <a href="#reels" className="hover:text-white">
+                  Reels
+                </a>
+              </li>
+
+            </ul>
+
           </div>
 
-          {/* కుడి వైపు: సోషల్ మీడియా లింక్స్ */}
+
+          {/* Marketing */}
           <div>
-            <h4 style={{ fontSize: "12px", fontWeight: "800", color: "#7a827e", textTransform: "uppercase", letterSpacing: "1.5px", margin: "0 0 16px 0" }}>
-              Connect
-            </h4>
-            <div style={{ display: "flex", gap: "15px", fontSize: "14px" }}>
-              {["Youtube", "Facebook", "Instagram"].map((platform) => (
-                <a 
-                  key={platform}
-                  href="#" 
-                  style={{ color: "#aab2ad", transition: "all 0.2s ease" }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent)"}
-                  onMouseLeave={(e) => e.currentTarget.style.color = "#aab2ad"}
-                >
-                  {platform}
+
+            <h3 className="font-semibold">
+              Marketing
+            </h3>
+
+            <ul className="mt-5 space-y-3 text-sm text-slate-400">
+
+              <li>
+                <a href="#marketing" className="hover:text-white">
+                  Digital Marketing
                 </a>
-              ))}
-            </div>
+              </li>
+
+              <li>
+                <a href="#marketing" className="hover:text-white">
+                  Social Media
+                </a>
+              </li>
+
+              <li>
+                <a href="#marketing" className="hover:text-white">
+                  Meta Ads
+                </a>
+              </li>
+
+            </ul>
+
           </div>
 
         </div>
 
-        {/* 🌟 బాటమ్ సెక్షన్: కాపీరైట్ & బ్యాక్ టు టాప్ బటన్ */}
-        <div className="footer-inner" style={{ paddingTop: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px", color: "#7a827e" }}>
-          <span>© {new Date().getFullYear()} {siteData.brand}. All rights reserved.</span>
-          
-          <a 
-            href="#ai-videos" /* మీ మెయిన్ సెక్షన్ ఐడి */
-            style={{ 
-              color: "#fff", 
-              fontWeight: "700", 
-              display: "flex", 
-              alignItems: "center", 
-              gap: "6px", 
-              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-              background: "#171c18",
-              padding: "10px 16px",
-              borderRadius: "999px",
-              border: "1px solid #303832"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "var(--accent)";
-              e.currentTarget.style.color = "var(--accent)";
-              e.currentTarget.style.transform = "translateY(-3px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#303832";
-              e.currentTarget.style.color = "#fff";
-              e.currentTarget.style.transform = "translateY(0px)";
-            }}
-          >
-            Back to top ↑
-          </a>
+
+        {/* Bottom */}
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+
+          <p>
+            © {new Date().getFullYear()} WebNSoftware. All rights reserved.
+          </p>
+
+          <p>
+            Built for modern businesses.
+          </p>
+
         </div>
 
       </div>
+
     </footer>
   );
 }
