@@ -80,11 +80,12 @@ a { color: inherit; text-decoration: none; }
 
 /* 🗺️ హీరో వైర్‌ఫ్రేమ్ కార్డ్ మోషన్ */
 .hero-wireframe { 
-  min-height:370px; 
+  /* min-height:370px; 
   border:1px solid var(--text); 
   border-radius:28px; 
-  padding:30px; 
+  padding:30px;  */
   transform:rotate(2deg); 
+  border-radius:38px; 
   background:#fff;
   transition: var(--transition-smooth);
   animation: floatWireframe 4s ease-in-out infinite alternate; /* 👈 గాల్లో తేలినట్లు ఉండే మోషన్ */

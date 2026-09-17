@@ -73,7 +73,8 @@ export default function HeroSection() {
         </div>
 
         {/* కుడివైపు: 🚀 ఇమేజ్ టైప్ ప్రదర్శన (Image/Fallback Section) */}
-        <div className="hero-image-container" style={{ position: "relative", width: "100%", height: "100%", minHeight: "350px" }}>
+        <div className="hero-wireframe" aria-hidden="true">
+        {/* <div className="hero-image-container" style={{ position: "relative", width: "100%", height: "100%", minHeight: "350px" }}> */}
           {heroData?.mediaUrl ? (
             // డేటాబేస్ లో ఇమేజ్ లింక్ ఉంటే ఇది డిస్‌ప్లే అవుతుంది
             <img 

@@ -17,19 +17,24 @@ export default function MarketingSection() {
   const [marketingItems, setMarketingItems] = useState<MarketingService[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. మార్కెటింగ్ సర్వీసెస్ కార్డ్స్ డేటా తెచ్చే useEffect మాత్రమే ఇక్కడ ఉంటుంది
   useEffect(() => {
     const fetchMarketingData = async () => {
+      // ప్రొడక్షన్ లేదా లోకల్ యుఆర్ఎల్ బ్యాకప్ సురక్షితంగా సెట్ చేయబడింది
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       try {
-        const res = await fetch(`${apiUrl}/content/services`);
+        // const res = await fetch(`${apiUrl}/content/services`);
+        const res = await fetch(`${apiUrl}/content/services`, {
+      cache: "no-store", 
+    });
         if (res.ok) {
           const data = await res.json();
+          // console.log("Marketing:::", data);
           
           if (data && data.success && Array.isArray(data.data)) {
-            // 🚀 FILTER LAYER: 'marketing' సెక్షన్ కార్డ్స్ ని మాత్రమే ఫిల్టర్ చేస్తుంది
+            // 🚀 SMART FILTER LAYER: ట్రిమ్ (.trim()) చేయడం వల్ల టెక్స్ట్ పక్కన స్పేస్ లు ఉన్నా క్లీన్ అయిపోతాయి
             const marketingOnly = data.data.filter(
-              (item: MarketingService) => item.section === "marketing"
+              (item: MarketingService) => 
+                item.section && item.section.trim().toLowerCase() === "marketing"
             );
             setMarketingItems(marketingOnly);
           }
@@ -44,11 +49,16 @@ export default function MarketingSection() {
     fetchMarketingData();
   }, []);
 
+
+
+
+
+  
   return (
     <section id="digital-marketing" className="section">
       <div className="container">
         
-        {/* 2. 🚀 కేవలం sectionKey="marketing" పంపితే చాలు, కాంపోనెంట్ దానంతట అదే API (/headings/marketing) నుండి డేటా తెచ్చుకుంటుంది */}
+        {/* కేవలం sectionKey="marketing" పంపితే చాలు */}
         <SectionHeading sectionKey="marketing" />
 
         {loading ? (
@@ -60,7 +70,8 @@ export default function MarketingSection() {
             {marketingItems.map((service, index) => (
               <Link key={service._id || index} href={`/services/${service._id}`} className="card">
                 <h3>{service.title}</h3>
-                <p>{service.description}</p>
+                {/* 🚀 తెల్లటి గ్యాప్స్ (\n) ఉన్నా డిస్క్రిప్షన్ లైన్ బై లైన్ అందంగా కనిపించడానికి whiteSpace స్టైల్ వాడాము */}
+                <p style={{ whiteSpace: "pre-line" }}>{service.description}</p>
               </Link>
             ))}
           </div>

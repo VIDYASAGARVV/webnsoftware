@@ -14,7 +14,8 @@ export default function LoginPage() {
 
     try {
       // 🚀 1. మీ అసలైన ఆన్‌లైన్ రెండర్ బ్యాకెండ్ API లింక్‌ను ఇక్కడ పక్కాగా ఇచ్చాము
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL as string) || 'https://webnsoftware-backend.onrender.com/api';
+      // const apiUrl = (process.env.NEXT_PUBLIC_API_URL as string) || 'https://webnsoftware-backend.onrender.com/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
       const res = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',

@@ -24,7 +24,7 @@ export default function AdminServicesPage() {
 
   // 📄 PAGINATION STATES
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 4;
+  const recordsPerPage = 10;
 
   // 1. Load data from Backend
   useEffect(() => {
@@ -154,6 +154,8 @@ export default function AdminServicesPage() {
                 <option value="service">Services Section Block</option>
                 <option value="marketing">Marketing Section Block</option>
                 <option value="ai-videos">Ai-Videos </option>
+                                <option value="hero">Hero Section Block</option>
+
               </select>
             </div>
             <div>
