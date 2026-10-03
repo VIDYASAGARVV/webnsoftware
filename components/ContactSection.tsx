@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { companyContent } from "../lib/content";
+// import { companyContent } from "../lib/content";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -97,11 +97,11 @@ export default function ContactSection() {
           </span>
 
           <h2 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
-            {companyContent.contact.title}
+          Let's build something useful.
           </h2>
 
           <p className="mt-6 max-w-xl text-lg leading-8 text-slate-800">
-            {companyContent.contact.description}
+        Tell us what you are planning and we'll turn the requirement into a clear digital roadmap.
           </p>
 
 
