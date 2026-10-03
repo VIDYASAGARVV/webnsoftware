@@ -78,10 +78,9 @@ export default function AdminAboutPage() {
   }
 
   return (
-    <div className="space-y-2 w-full max-w-5xl">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Manage About Content</h1>
+         <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
+          <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-300">Manage About Content</h1>
         <p className="mt-2 text-sm text-gray-500">Configure core typography and highlights displayed inside the landing bio panel.</p>
       </div>
 
@@ -98,7 +97,8 @@ export default function AdminAboutPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+                  <form onSubmit={handleSubmit} className="bg-slate-800/50 border border-slate-800 p-6 rounded-2xl mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          
           {/* Eyebrow Input Element */}
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">

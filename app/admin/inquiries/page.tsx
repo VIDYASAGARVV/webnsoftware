@@ -54,9 +54,10 @@ export default function AdminInquiriesPage() {
   }, [router]);
 
   return (
-    <div className="space-y-6 w-full">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">User Inquiries Log</h1>
+      <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
+      <div className="max-w-6xl mx-auto">
+        
+        <h1 className="text-3xl font-bold tracking-tight text-gray-300">User Inquiries Log</h1>
         <p className="mt-1 text-sm text-gray-500">Monitor and track incoming contact submissions and feedback entries.</p>
       </div>
 

@@ -38,7 +38,7 @@ export default function Navbar() {
               className="text-xl font-bold tracking-tight text-white"
             >
               Web
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-[#b6ff00] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r text-3xl from-blue-400 via-cyan-300 to-[#b6ff00] bg-clip-text text-transparent">
                 N
               </span>
               Software

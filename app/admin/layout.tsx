@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { name: 'Dashboard Home', path: '/admin/dashboard' },
-    {name: 'Headings Section', path: '/admin/headings'},
+    {name: 'Hero Section', path: '/admin/hero'},
     { name: 'Manage Services', path: '/admin/services' },
      { name: 'Manage Inquiries', path: '/admin/inquiries' },
     { name: 'Manage About us', path: '/admin/about' },
@@ -63,7 +63,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-gray-900 text-white flex flex-col justify-between shadow-lg">
         <div>
           <div className="p-5 font-bold text-xl border-b border-gray-800 text-blue-400">
-            Admin Console
+                  <a
+              href="#home"
+              className="text-xl font-bold tracking-tight text-white"
+            >
+              Web
+              <span className="bg-gradient-to-r text-3xl from-blue-400 via-cyan-300 to-[#b6ff00] bg-clip-text text-transparent">
+                N
+              </span>
+              Software
+            </a>
+
           </div>
           <nav className="p-4 space-y-2">
             {menuItems.map((item, idx) => (
@@ -88,7 +98,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <header className="bg-white shadow-sm p-4 text-right font-medium text-gray-600 border-b">
           Welcome back, {adminName} ✨
         </header>
-        <div className="p-8">
+        <div className="p-2">
           {children}
         </div>
       </main>

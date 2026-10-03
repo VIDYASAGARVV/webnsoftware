@@ -119,7 +119,7 @@ export default function ContactSection() {
                 </p>
 
                 <p className="font-semibold">
-                  hello@webnsoftware.com
+                 <a href="mailto:info@webnsoftware.com"> info@webnsoftware.com</a>
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function ContactSection() {
                 </p>
 
                 <p className="font-semibold">
-                  +91 90000 00000
+                  +91 7569100563
                 </p>
               </div>
             </div>

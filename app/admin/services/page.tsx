@@ -1,252 +1,268 @@
+// app/admin/services/page.tsx (Part 2 - State & Logics)
 'use client';
 import { useState, useEffect } from 'react';
 
-// 🚀 TypeScript Data Structure
-interface Service {
-  _id: string;
+interface ServiceItem {
+  _id?: string;
+  id?: string;
   title: string;
-  description: string;
-  section: string; 
-  mediaUrl: string;
+  shortDescription: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  whatsappMessage: string;
+  category: 'business-web' | 'ecommerce' | 'digital-marketing' | 'ai-videos' | 'reels';
 }
 
 export default function AdminServicesPage() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('service');
-  const [mediaUrl, setMediaUrl] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [form, setForm] = useState<ServiceItem>({
+    title: '',
+    shortDescription: '',
+    imageUrl: '',
+    videoUrl: '',
+    whatsappMessage: '',
+    category: 'business-web'
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentId, setCurrentId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // 🔄 EDIT MODE STATES
-  const [editingId, setEditingId] = useState<string | null>(null);
+  // 1. GET ALL SERVICES FROM BACKEND
+  const fetchServices = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/services');
+      const data = await res.json();
+      // ఒకవేళ డేటా అర్రే కాకపోతే ఎంప్టీ అర్రే సెట్ చేస్తుంది
+      setServices(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Failed to load services:", err);
+      setError("Could not connect to backend server.");
+    }
+  };
 
-  // 📄 PAGINATION STATES
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
-
-  // 1. Load data from Backend
   useEffect(() => {
     fetchServices();
   }, []);
 
-  const fetchServices = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch('http://localhost:5000/api/content/services');
-      const responseData = await res.json();
-      
-      if (!res.ok) throw new Error('Failed to retrieve items');
-
-      if (responseData && responseData.success && Array.isArray(responseData.data)) {
-        setServices(responseData.data);
-      } else if (Array.isArray(responseData)) {
-        setServices(responseData);
-      } else if (responseData && Array.isArray(responseData.services)) {
-        setServices(responseData.services);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 2. Add or Update Handler
-  const handleFormSubmit = async (e: React.FormEvent) => {
+  // 2. SUBMIT FORM (CREATE OR UPDATE)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
-    if (!title || !description || !mediaUrl.trim()) {
-      alert("All fields are mandatory!");
-      return;
-    }
+    const url = isEditing 
+      ? `http://localhost:5000/api/services/${currentId}` 
+      : 'http://localhost:5000/api/services';
+    const method = isEditing ? 'PUT' : 'POST';
+
+    // కేటగిరీని బట్టి ఇమేజ్ లేదా వీడియో ఫీల్డ్స్ మాత్రమే పంపే సేఫ్ పేలోడ్ లాజిక్
+    const isVideoCategory = ['ai-videos', 'reels'].includes(form.category);
+    const payload = {
+      title: form.title,
+      shortDescription: form.shortDescription,
+      whatsappMessage: form.whatsappMessage,
+      category: form.category,
+      imageUrl: isVideoCategory ? '' : form.imageUrl,
+      videoUrl: isVideoCategory ? form.videoUrl : ''
+    };
 
     try {
-      const token = localStorage.getItem('token');
-      const url = editingId 
-        ? `http://localhost:5000/api/content/update/${editingId}`
-        : 'http://localhost:5000/api/content/add';
-        
-      const method = editingId ? 'PUT' : 'POST';
-
       const res = await fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ title, description, section: category, mediaUrl: mediaUrl.trim() }),
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error('Failed to save record.');
+      const data = await res.json();
 
-      clearForm();
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'Something went wrong while saving.');
+      }
+
+      alert(isEditing ? 'Service updated successfully!' : 'Service added successfully!');
       fetchServices();
+      resetForm();
     } catch (err: any) {
-      alert(err.message);
+      console.error("Error saving service:", err);
+      setError(err.message || 'Server connection failed.');
     }
   };
 
-  // 3. Setup Edit Values
-  const handleEditClick = (item: Service) => {
-    setEditingId(item._id);
-    setTitle(item.title);
-    setDescription(item.description);
-    setCategory(item.section);
-    setMediaUrl(item.mediaUrl || '');
-  };
-
-  const clearForm = () => {
-    setEditingId(null);
-    setTitle('');
-    setDescription('');
-    setCategory('service');
-    setMediaUrl('');
-  };
-
-  // 4. Delete Handler
-  const handleDeleteService = async (id: string) => {
-    if (!confirm('Are you sure?')) return;
-
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5000/api/content/delete/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (!res.ok) throw new Error('Could not delete');
-      if (editingId === id) clearForm();
-      fetchServices();
-    } catch (err: any) {
-      alert(err.message);
+  // 3. DELETE SERVICE
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this service?')) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/services/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          fetchServices();
+        } else {
+          const data = await res.json();
+          setError(data.error || "Failed to delete item.");
+        }
+      } catch (err) {
+        console.error("Error deleting service:", err);
+        setError("Connection error while deleting.");
+      }
     }
   };
 
-  // 📊 Pagination Math
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = services.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(services.length / recordsPerPage);
+  // 4. ACTION TRIGGERS (EDIT & RESET)
+  const startEdit = (service: ServiceItem) => {
+    setError(null);
+    setForm({
+      title: service.title || '',
+      shortDescription: service.shortDescription || '',
+      imageUrl: service.imageUrl || '',
+      videoUrl: service.videoUrl || '',
+      whatsappMessage: service.whatsappMessage || '',
+      category: service.category // Auto-bind category correctly
+    });
+    setCurrentId(service._id || service.id || null);
+    setIsEditing(true);
+  };
+
+  const resetForm = () => {
+    setForm({
+      title: '',
+      shortDescription: '',
+      imageUrl: '',
+      videoUrl: '',
+      whatsappMessage: '',
+      category: 'business-web'
+    });
+    setIsEditing(false);
+    setCurrentId(null);
+    setError(null);
+  };
+// app/admin/services/page.tsx (Part 3 - User Interface & Render Layout)
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Manage Content Services</h1>
-        <p className="mt-2 text-sm text-gray-500">Configure cards displayed across core marketing pages.</p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
+      <div className="max-w-6xl mx-auto">
         
-        {/* Left Side: Form Block */}
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">
-            {editingId ? "⚡ Edit Module" : "Add New Module"}
-          </h2>
-          <form onSubmit={handleFormSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Service Title</label>
-              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. Next.js Architecture" required />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Target Section Location</label>
-              <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-sm text-gray-800">
-                <option value="service">Services Section Block</option>
-                <option value="marketing">Marketing Section Block</option>
-                <option value="ai-videos">Ai-Videos </option>
-                                <option value="hero">Hero Section Block</option>
-
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Description Paragraph</label>
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Explain details..." required />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Media URL</label>
-              <input type="text" value={mediaUrl} onChange={(e) => setMediaUrl(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Link here..." required />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <button type="submit" className={`w-full text-white font-medium py-2 rounded-md transition text-sm ${editingId ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
-                {editingId ? "Update Component Live" : "Publish Live Component"}
-              </button>
-              {editingId && (
-                <button type="button" onClick={clearForm} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-md transition text-sm">
-                  Cancel Edit
-                </button>
-              )}
-            </div>
-          </form>
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Manage All Services & Content Grid
+          </h1>
         </div>
-
-        {/* Right Side: Data Table */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between">
-          <div>
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-800">Active Aggregations</h2>
-              <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">{services.length} Total</span>
-            </div>
-
-            {loading ? (
-              <div className="p-8 text-center text-gray-400">Loading catalog modules...</div>
-            ) : error ? (
-              <div className="p-8 text-center text-red-500">{error}</div>
-            ) : services.length === 0 ? (
-              <div className="p-8 text-center text-gray-400">No services found.</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                      <th className="px-6 py-3">Module Identity</th>
-                      <th className="px-6 py-3">Category Tag</th>
-                      <th className="px-6 py-3 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 text-sm">
-                    {currentRecords.map((item) => (
-                      <tr key={item._id} className={`hover:bg-gray-50/70 transition ${editingId === item._id ? 'bg-amber-50/50' : ''}`}>
-                        <td className="px-6 py-4">
-                          <div className="font-semibold text-gray-800">{item.title}</div>
-                          <div className="text-xs text-gray-400 max-w-sm truncate">{item.description}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded capitalize font-medium">
-                            {item.section}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-right space-x-2 whitespace-nowrap">
-                          <button onClick={() => handleEditClick(item)} className="text-blue-600 hover:text-blue-900 font-medium text-xs bg-blue-50 hover:bg-blue-100 px-2.5 py-1.5 rounded transition">
-                            Edit
-                          </button>
-                          <button onClick={() => handleDeleteService(item._id)} className="text-red-600 hover:text-red-900 font-medium text-xs bg-red-50 hover:bg-red-100 px-2.5 py-1.5 rounded transition">
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
-          {/* Pagination Controls */}
-          {!loading && services.length > 0 && (
-            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-              <div className="text-xs text-gray-500">
-                Showing <span className="font-semibold">{indexOfFirstRecord + 1}</span> to{" "}
-                <span className="font-semibold">{indexOfLastRecord > services.length ? services.length : indexOfLastRecord}</span> of{" "}
-                <span className="font-semibold">{services.length}</span> outcomes
-              </div>
-              <div className="inline-flex gap-2">
-                <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 text-xs border border-gray-300 rounded bg-white font-medium disabled:opacity-50">Previous</button>
-                <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1 text-xs border border-gray-300 rounded bg-white font-medium disabled:opacity-50">Next</button>
+        
+        {/* CRUD Input Form */}
+        <form onSubmit={handleSubmit} className="bg-slate-800/50 border border-slate-800 p-6 rounded-2xl mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          {/* Dynamic Error Messaging Alert */}
+          {error && (
+            <div className="col-span-1 md:col-span-2 bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl flex items-start gap-2 text-sm">
+              <span className="text-base">⚠️</span>
+              <div>
+                <p className="font-semibold">Submit Error:</p>
+                <p className="mt-0.5 opacity-90">{error}</p>
               </div>
             </div>
           )}
 
+          {/* Title Field */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Service Title</label>
+            <input type="text" placeholder="e.g., Custom AI Video Design" className="p-3 bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-white" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required />
+          </div>
+
+          {/* Category Dropdown */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Category</label>
+            <select className="p-3 bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-white" value={form.category} onChange={e => setForm({...form, category: e.target.value as any})} required>
+              <option value="business-web">Business Websites</option>
+              <option value="ecommerce">e-Commerce Websites</option>
+              <option value="digital-marketing">Digital Marketing + Meta Ads</option>
+              <option value="ai-videos">AI Videos</option>
+              <option value="reels">Social Media Reels</option>
+            </select>
+          </div>
+
+          {/* Conditional Media Rendering Inputs */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Image URL (For Web/Marketing)</label>
+            <input type="text" placeholder="e.g., /images/services/web.jpg" className="p-3 bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-white disabled:opacity-40 disabled:cursor-not-allowed" value={form.imageUrl || ''} onChange={e => setForm({...form, imageUrl: e.target.value})} disabled={['ai-videos', 'reels'].includes(form.category)} />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Video URL (For AI Videos/Reels)</label>
+            <input type="text" placeholder="e.g., /videos/promo1.mp4" className="p-3 bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-white disabled:opacity-40 disabled:cursor-not-allowed" value={form.videoUrl || ''} onChange={e => setForm({...form, videoUrl: e.target.value})} disabled={!['ai-videos', 'reels'].includes(form.category)} />
+          </div>
+
+          {/* Short Description */}
+          <div className="flex flex-col gap-1 md:col-span-2">
+            <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Short Description</label>
+            <textarea placeholder="Write a short summary..." className="p-3 bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-white h-24" value={form.shortDescription} onChange={e => setForm({...form, shortDescription: e.target.value})} required />
+          </div>
+
+          {/* WhatsApp Text Template */}
+          <div className="flex flex-col gap-1 md:col-span-2">
+            <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider">WhatsApp Message Text</label>
+            <input type="text" placeholder="Pre-filled message when customer clicks WhatsApp icon..." className="p-3 bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 text-white" value={form.whatsappMessage} onChange={e => setForm({...form, whatsappMessage: e.target.value})} required />
+          </div>
+
+          {/* Action Trigger Buttons */}
+          <div className="md:col-span-2 flex gap-3 mt-2">
+            <button type="submit" className="bg-blue-600 hover:bg-blue-500 transition text-white px-6 py-3 font-semibold rounded-xl">
+              {isEditing ? 'Update Service' : 'Add New Item'}
+            </button>
+            {isEditing && (
+              <button type="button" onClick={resetForm} className="bg-slate-700 hover:bg-slate-600 transition text-white px-6 py-3 font-semibold rounded-xl">
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+
+        {/* Live Grid Table View Rendering */}
+        <div className="border border-slate-800 bg-slate-800/20 rounded-2xl overflow-hidden shadow-xl">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-800 border-b border-slate-700 text-slate-300 text-xs font-semibold uppercase tracking-wider">
+                <th className="p-4">Title</th>
+                <th className="p-4">Category</th>
+                <th className="p-4">Media Path</th>
+                <th className="p-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {services.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-8 text-center text-slate-500">
+                    No items added yet. Complete the form above to add content.
+                  </td>
+                </tr>
+              ) : (
+                services.map((service, index) => (
+                  <tr key={`${service._id || service.id || index}-${index}`} className="border-b border-slate-800 hover:bg-slate-800/40 transition">
+                    <td className="p-4">
+                      <div className="font-bold text-white">{service.title}</div>
+                      <div className="text-xs text-slate-400 mt-1 line-clamp-1">{service.shortDescription}</div>
+                    </td>
+                    <td className="p-4">
+                      <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide">
+                        {service.category?.replace('-', ' ')}
+                      </span>
+                    </td>
+                    <td className="p-4 text-xs text-slate-400 font-mono">
+                      {service.videoUrl 
+                        ? `🎥 ${service.videoUrl.substring(0, 22)}...` 
+                        : `🖼️ ${service.imageUrl ? service.imageUrl.substring(0, 22) : 'No Image'}...`
+                      }
+                    </td>
+                    <td className="p-4 text-right space-x-3">
+                      <button onClick={() => startEdit(service)} className="text-blue-400 hover:text-blue-300 font-semibold text-sm transition">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(service._id || service.id || '')} className="text-red-400 hover:text-red-300 font-semibold text-sm transition">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

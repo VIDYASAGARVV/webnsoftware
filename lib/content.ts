@@ -1,214 +1,102 @@
-// lib/content.ts
+// // app/lib/content.ts
 
-export const companyContent = {
-  heading:
-    "WebNSoftware helps businesses build modern websites, eCommerce platforms, custom software and powerful digital marketing solutions that turn ideas into real business growth.",
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-  services: [
-    {
-      id: 1,
-      title: "Business Websites",
-      shortDescription:
-        "Modern, fast and professional websites designed to build trust and generate customers.",
-      whatsappMessage:
-        "Hi WebNSoftware, I am interested in Business Website development. Please share the details and pricing.",
-    },
-    {
-      id: 2,
-      title: "eCommerce Websites",
-      shortDescription:
-        "Complete online stores with products, cart, checkout, payments and admin management.",
-      whatsappMessage:
-        "Hi WebNSoftware, I am interested in an eCommerce Website. Please share the details and pricing.",
-    },
-    {
-      id: 3,
-      title: "Custom Software",
-      shortDescription:
-        "Business-specific software solutions for CRM, billing, quotations, dashboards and automation.",
-      whatsappMessage:
-        "Hi WebNSoftware, I am interested in Custom Software development. Please share the details and pricing.",
-    },
-  ],
-
-aiVideos: [
-  {
-    id: 1,
-    title: "AI Business Videos",
-    shortDescription:
-      "Create engaging AI-powered promotional videos for your business and products.",
-    video: "/videos/ai-video1.mp4",
-    whatsappMessage:
-      "Hi WebNSoftware, I am interested in AI Business Videos. Please share the details.",
-  },
-
-  {
-    id: 2,
-    title: "AI Promotional Videos",
-    shortDescription:
-      "Professional AI-generated promotional content designed for social media and advertising.",
-    video: "/videos/ai-video2.mp4",
-    whatsappMessage:
-      "Hi WebNSoftware, I am interested in AI Promotional Videos. Please share the details.",
-  },
-],
-
-reels: [
-  {
-    id: 1,
-    title: "iPhone Reels",
-    shortDescription:
-      "Professional short-form videos shot using iPhone with fast and instant delivery.",
-    video: "/videos/ai-video2.mp4",
-    whatsappMessage:
-      "Hi WebNSoftware, I am interested in iPhone Reels. Please share the details and pricing.",
-  },
-
-  {
-    id: 2,
-    title: "Instant Delivery",
-    shortDescription:
-      "Shoot, edit and receive your social media reels quickly for your next campaign.",
-    video: "/videos/ai-video1.mp4",
-    whatsappMessage:
-      "Hi WebNSoftware, I am interested in Instant Reel Delivery. Please share the details.",
-  },
-],
-
-  digitalMarketing: [
-    {
-      id: 1,
-      title: "Digital Marketing",
-      shortDescription:
-        "Grow your online presence with strategic digital marketing solutions.",
-      whatsappMessage:
-        "Hi WebNSoftware, I am interested in Digital Marketing services. Please share the details.",
-    },
-    {
-      id: 2,
-      title: "Social Media Videos",
-      shortDescription:
-        "Creative videos designed to increase engagement and strengthen your social media presence.",
-      whatsappMessage:
-        "Hi WebNSoftware, I am interested in Social Media Video services. Please share the details.",
-    },
-    {
-      id: 3,
-      title: "Meta Ads",
-      shortDescription:
-        "Targeted Facebook and Instagram advertising campaigns designed to reach potential customers.",
-      whatsappMessage:
-        "Hi WebNSoftware, I am interested in Meta Ads. Please share the details and pricing.",
-    },
-  ],
-   about: {
-    eyebrow: "About Us",
-    title: "One digital partner for your next business idea.",
-    description:
-      "WebnSoftware brings web development, AI-powered video content and digital marketing into one flexible digital experience. This starter site is structured around dynamic content so sections can be changed without rewriting the page layout."
-  },
-  contact: {
-    title: "Let's build something useful.",
-    description: "Tell us what you are planning and we'll turn the requirement into a clear digital roadmap."
-  }
-};
-// export type Service = {
-//   title: string;
-//   description: string;
-//   icon: string;
-// };
-
-// export type Video = {
-//   title: string;
-//   description: string;
-//   duration: string;
-//   category: string;
-//   videoUrl?: string;
-// };
-
-// export type MarketingService = {
-//   title: string;
-//   description: string;
-//   points: string[];
-// };
-
-// export const siteContent = {
-//   brand: "WebnSoftware",
-//   tagline: "Digital products, AI videos & growth solutions",
-//   header: {
-//     nav: ["Home", "Services", "AI Videos", "Digital Marketing", "About Us", "Contact Us"],
-//     cta: "Get Started"
-//   },
-//   services: [
-//     {
-//       title: "Web Development",
-//       description: "Fast, responsive and scalable websites built for modern businesses.",
-//       icon: "01"
-//     },
-//     {
-//       title: "E-commerce",
-//       description: "Conversion-focused online stores with simple product and order management.",
-//       icon: "02"
-//     },
-//     {
-//       title: "Business Solutions",
-//       description: "Custom digital solutions that simplify daily business workflows.",
-//       icon: "03"
-//     },
-//     {
-//       title: "UI / UX Design",
-//       description: "Clean interfaces and user journeys designed around your customers.",
-//       icon: "04"
+// // 1. Fetch Hero Heading Content
+// export async function getHeroContent(): Promise<{ heading: string }> {
+//   try {
+//     const res = await fetch(`${API_BASE_URL}/hero`, { cache: 'no-store' });
+    
+//     // res.ok కాకపోతే ఎర్రర్ త్రో చేయకుండా నేరుగా ఫాల్‌బ్యాక్ రిటర్న్ చేయండి
+//     if (!res.ok) {
+//       console.warn("Backend API not responding, using static fallback for hero.");
+//       return { heading: "WebNSoftware helps businesses build modern websites, eCommerce platforms, custom software and powerful digital marketing solutions that turn ideas into real business growth." };
 //     }
-//   ] satisfies Service[],
-//   aiVideos: [
-//     {
-//       title: "AI Product Promo",
-//       description: "Short-form product video concept generated for social media campaigns.",
-//       duration: "00:30",
-//       category: "Product",  
-//       videoUrl: "/videos/promo.mp4",
-//     },
-//     {
-//       title: "AI Business Ad",
-//       description: "A cinematic business advertisement concept for lead generation.",
-//       duration: "00:45",
-//       category: "Business",
-//       videoUrl: "/videos/business.mp4",
-//     },
-//     {
-//       title: "AI Explainer",
-//       description: "An easy-to-understand explainer video for a digital service.",
-//       duration: "01:00",
-//       category: "Explainer",
-//       videoUrl: "/videos/promo.mp4",
-//     }
-//   ] satisfies Video[],
-//   marketing: [
-//     {
-//       title: "SEO & Content",
-//       description: "Build long-term organic visibility with useful, search-focused content.",
-//       points: ["Keyword strategy", "On-page SEO", "Content planning"]
-//     },
-//     {
-//       title: "Social Media",
-//       description: "Consistent creative campaigns that turn attention into conversations.",
-//       points: ["Content calendar", "Creative posts", "Performance tracking"]
-//     },
-//     {
-//       title: "Paid Advertising",
-//       description: "Targeted campaigns designed around leads, sales and measurable growth.",
-//       points: ["Campaign setup", "Audience targeting", "Conversion tracking"]
-//     }
-//   ] satisfies MarketingService[],
-//   about: {
-//     eyebrow: "About Us",
-//     title: "One digital partner for your next business idea.",
-//     description:
-//       "WebnSoftware brings web development, AI-powered video content and digital marketing into one flexible digital experience. This starter site is structured around dynamic content so sections can be changed without rewriting the page layout."
-//   },
-//   contact: {
-//     title: "Let's build something useful.",
-//     description: "Tell us what you are planning and we'll turn the requirement into a clear digital roadmap."
+    
+//     return await res.json();
+//   } catch (error) {
+//     console.error("Hero Fetch Error:", error);
+//     return { heading: "WebNSoftware helps businesses build modern websites, eCommerce platforms, custom software and powerful digital marketing solutions that turn ideas into real business growth." };
 //   }
-// };
+// }
+
+// // 2. Fetch All Services
+// export async function getServices(): Promise<any[]> {
+//   try {
+//     const res = await fetch(`${API_BASE_URL}/services`, { cache: 'no-store' });
+    
+//     if (!res.ok) {
+//       console.warn("Backend API not responding, using static fallback for services.");
+//       return getStaticServices(); // కింద ఉన్న స్టాటిక్ డేటాను వాడుకుంటుంది
+//     }
+    
+//     return await res.json();
+//   } catch (error) {
+//     console.error("Services Fetch Error:", error);
+//     return getStaticServices();
+//   }
+// }
+
+// // బ్యాకెండ్ కనెక్ట్ అవ్వనప్పుడు చూపించాల్సిన పాత డేటా
+// function getStaticServices() {
+//   return [
+//     {
+//       id: 1,
+//       title: "Business Websites",
+//       shortDescription: "Modern, fast and professional websites designed to build trust and generate customers.",
+//       imageUrl: "/images/services/web-development.jpg",  
+//       whatsappMessage: "Hi WebNSoftware, I am interested in Business Website development. Please share the details and pricing.",
+//     },
+//     {
+//       id: 2,
+//       title: "e-Commerce Websites",
+//       shortDescription: "Complete online stores with products, cart, checkout, payments and admin management.",
+//       imageUrl: "/images/services/ecommerce.jpg",
+//       whatsappMessage: "Hi WebNSoftware, I am interested in an eCommerce Website. Please share the details and pricing.",
+//     }
+//     // మీకు కావాల్సిన మిగతా సర్వీసెస్ ఇక్కడ ఉంచుకోవచ్చు...
+//   ];
+// }
+
+
+// app/lib/content.ts
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+export interface ServiceItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  shortDescription: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  whatsappMessage: string;
+  category: 'business-web' | 'ecommerce' | 'digital-marketing' | 'ai-videos' | 'reels';
+}
+
+
+// 1. Fetch Hero Heading Content
+export async function getHeroContent(): Promise<{ heading: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/hero`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch hero content');
+    return res.json();
+  } catch (error) {
+    console.error(error);
+    return { heading: "WebNSoftware helps businesses build modern websites..." }; // Fallback
+  }
+}
+
+// 2. Fetch All Services
+export async function getServices(): Promise<ServiceItem[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/services`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch services');
+    return res.json();
+  } catch (error) {
+    console.error(error);
+    return []; // Fallback empty array
+  }
+}
+
+// 3. get about section 

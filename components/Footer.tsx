@@ -11,11 +11,16 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
 
-            <h2 className="text-2xl font-bold">
+            <a
+              href="#home"
+              className="text-xl font-bold tracking-tight text-white"
+            >
               Web
-              <span className="text-blue-400">N</span>
+              <span className="bg-gradient-to-r text-3xl from-blue-400 via-cyan-300 to-[#b6ff00] bg-clip-text text-transparent">
+                N
+              </span>
               Software
-            </h2>
+            </a>
 
             <p className="mt-4 max-w-md leading-7 text-slate-400">
               Websites, eCommerce, custom software, AI videos,
