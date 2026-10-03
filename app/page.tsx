@@ -7,7 +7,7 @@ import ContactSection from "../components/ContactSection";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AboutSection from "../components/AboutSection";
-import ServiceCard from "../components/ServiceCard";
+// import ServiceCard from "../components/ServiceCard";
 // app/page.tsx (Part 1: Paste this right above your main Home function)
 
 function ServiceCard({ service, index, getWhatsAppUrl }: { service: any, index: number, getWhatsAppUrl: any }) {
@@ -219,7 +219,7 @@ export default async function Home() {
           </a>
         </section>
 
-        <AboutSection />
+        <AboutSection aboutData={null} />
         {/* <ContactSection /> */}
       </main>
       <Footer />
