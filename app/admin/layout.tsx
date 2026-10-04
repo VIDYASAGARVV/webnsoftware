@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { name: 'Dashboard Home', path: '/admin/dashboard' },
-    {name: 'Hero Section', path: '/admin/hero'},
+    {name: 'Heading Section', path:'/admin/headings'},
     { name: 'Manage Services', path: '/admin/services' },
      { name: 'Manage Inquiries', path: '/admin/inquiries' },
     { name: 'Manage About us', path: '/admin/about' },

@@ -23,15 +23,22 @@ export default function SectionHeading({ sectionKey, eyebrow: propEyebrow, title
       const fetchHeading = async () => {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
         try {
-          const res = await fetch(`${apiUrl}/headings/${sectionKey}`);
+          const res = await fetch(`${apiUrl}/headings`); // మీ అడ్మిన్ పేజీలో వాడినట్లుగా పూర్తి అర్రేను తెచ్చుకుంటుంది
           if (res.ok) {
             const result = await res.json();
-            if (result.success && result.data) {
-              setHeadingData({
-                eyebrow: result.data.eyebrow || "",
-                title: result.data.title || "",
-                text: result.data.text || ""
-              });
+            
+            // బ్యాకెండ్ నుండి వచ్చే రెస్పాన్స్ (result.success మరియు result.data) వెరిఫికేషన్
+            if (result.success && Array.isArray(result.data)) {
+              // మీ sectionKey (e.g., 'services' లేదా 'about-us') తో మ్యాచ్ అయ్యే రికార్డును వెతుకుతుంది
+              const matchedHeading = result.data.find((h: { sectionKey: string; status: string; }) => h.sectionKey === sectionKey && h.status === 'active');
+              
+              if (matchedHeading) {
+                setHeadingData({
+                  eyebrow: matchedHeading.eyebrow || "",
+                  title: matchedHeading.title || "",
+                  text: matchedHeading.text || "" // మీ మోడల్ లో ఫీల్డ్ పేరు 'text'
+                });
+              }
             }
           }
         } catch (error) {
@@ -45,13 +52,35 @@ export default function SectionHeading({ sectionKey, eyebrow: propEyebrow, title
     }
   }, [sectionKey]);
 
-  if (loading) return <div className="section-heading animate-pulse"><div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div><div className="h-8 bg-gray-200 rounded w-3/4"></div></div>;
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-3xl text-center animate-pulse">
+        <div className="h-4 bg-slate-800 rounded mx-auto w-1/4 mb-3"></div>
+        <div className="h-10 bg-slate-800 rounded mx-auto w-3/4"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="section-heading">
-      {headingData.eyebrow && <p className="eyebrow">{headingData.eyebrow}</p>}
-      <h2>{headingData.title}</h2>
-      {headingData.text && <p className="muted">{headingData.text}</p>}
+    <div className="mx-auto max-w-3xl text-center mb-10">
+      {/* 1. EYEBROW TAG */}
+      {headingData.eyebrow && (
+        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 block mb-3">
+          {headingData.eyebrow}
+        </span>
+      )}
+      
+      {/* 2. MAIN GRADIENT TITLE */}
+      <h2 className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl">
+        {headingData.title || "Digital products for modern businesses."}
+      </h2>
+      
+      {/* 3. SUBTEXT DESCRIPTION */}
+      {headingData.text && (
+        <p className="mt-4 text-slate-300 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
+          {headingData.text}
+        </p>
+      )}
     </div>
   );
 }

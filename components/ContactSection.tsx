@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-// import { companyContent } from "../lib/content";
+import { useState, useEffect } from "react";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -16,6 +15,42 @@ export default function ContactSection() {
   });
 
   const [loading, setLoading] = useState(false);
+
+  // 🚀 డైనమిక్ హెడ్డింగ్స్ కోసం స్టేట్ సెటప్
+  const [headingData, setHeadingData] = useState({
+    eyebrow: "CONTACT US",
+    title: "Let's build something useful.",
+    text: "Tell us what you are planning and we'll turn the requirement into a clear digital roadmap."
+  });
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+  // 🚀 బ్యాకెండ్ నుండి 'contact' కీ తో హెడ్డింగ్స్ తెచ్చుకునే లాజిక్
+  useEffect(() => {
+    const fetchContactHeading = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/headings`);
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success && Array.isArray(result.data)) {
+            // అడ్మిన్ ప్యానెల్ లో మీరు యాడ్ చేసిన 'contact' కీ ని వెతుకుతుంది
+            const matched = result.data.find((h: any) => h.sectionKey === "contact");
+            if (matched) {
+              setHeadingData({
+                eyebrow: matched.eyebrow || "CONTACT US",
+                title: matched.title || "Let's build something useful.",
+                text: matched.text || "Tell us what you are planning..."
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch contact heading layout:", error);
+      }
+    };
+
+    fetchContactHeading();
+  }, [apiUrl]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -34,9 +69,6 @@ export default function ContactSection() {
       type: "",
       message: "",
     });
-
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
     try {
       const response = await fetch(`${apiUrl}/contact`, {
@@ -69,8 +101,7 @@ export default function ContactSection() {
     } catch (error) {
       setStatus({
         type: "error",
-        message:
-          "Cannot connect to server. Please check if backend is running.",
+        message: "Cannot connect to server. Please check if backend is running.",
       });
     } finally {
       setLoading(false);
@@ -84,82 +115,59 @@ export default function ContactSection() {
     >
       {/* Background Decorative Glow */}
       <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-white/30 blur-3xl" />
-
       <div className="absolute -bottom-40 -right-20 h-[450px] w-[450px] rounded-full bg-lime-300/50 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
 
         {/* LEFT CONTENT */}
         <div>
-
-          <span className="inline-flex rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-semibold backdrop-blur">
-            CONTACT US
+          {/* 1. DYNAMIC EYEBROW TAG */}
+          <span className="inline-flex rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-semibold backdrop-blur uppercase">
+            {headingData.eyebrow}
           </span>
 
+          {/* 2. DYNAMIC MAIN TITLE */}
           <h2 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
-          Let's build something useful.
+            {headingData.title}
           </h2>
 
+          {/* 3. DYNAMIC DESCRIPTION TEXT */}
           <p className="mt-6 max-w-xl text-lg leading-8 text-slate-800">
-        Tell us what you are planning and we'll turn the requirement into a clear digital roadmap.
+            {headingData.text}
           </p>
-
 
           {/* Contact Information */}
           <div className="mt-8 space-y-4">
-
             <div className="flex items-center gap-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white">
                 ✉
               </div>
-
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-700">
-                  Email
-                </p>
-
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-700">Email</p>
                 <p className="font-semibold">
-                 <a href="mailto:info@webnsoftware.com"> info@webnsoftware.com</a>
+                  <a href="mailto:info@webnsoftware.com">info@webnsoftware.com</a>
                 </p>
               </div>
             </div>
-
 
             <div className="flex items-center gap-4">
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white">
                 ☎
               </div>
-
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-700">
-                  Phone
-                </p>
-
-                <p className="font-semibold">
-                  +91 7569100563
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-700">Phone</p>
+                <p className="font-semibold">+91 7569100563</p>
               </div>
             </div>
-
           </div>
-
         </div>
-
 
         {/* FORM */}
         <div className="rounded-[2rem] border border-black/10 bg-black p-6 shadow-2xl sm:p-8">
-
-          <form
-            className="space-y-6"
-            onSubmit={handleSubmit}
-          >
-
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Name */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">
-                Name
-              </label>
-
+              <label className="mb-2 block text-sm font-medium text-white">Name</label>
               <input
                 name="name"
                 value={formData.name}
@@ -170,13 +178,9 @@ export default function ContactSection() {
               />
             </div>
 
-
             {/* Email */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">
-                Email
-              </label>
-
+              <label className="mb-2 block text-sm font-medium text-white">Email</label>
               <input
                 name="email"
                 type="email"
@@ -188,13 +192,9 @@ export default function ContactSection() {
               />
             </div>
 
-
             {/* Requirement */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">
-                Requirement
-              </label>
-
+              <label className="mb-2 block text-sm font-medium text-white">Requirement</label>
               <textarea
                 name="message"
                 rows={5}
@@ -206,7 +206,6 @@ export default function ContactSection() {
               />
             </div>
 
-
             {/* Submit */}
             <button
               type="submit"
@@ -216,8 +215,7 @@ export default function ContactSection() {
               {loading ? "Sending..." : "Send Enquiry →"}
             </button>
 
-
-            {/* Status */}
+            {/* Status Messages */}
             {status.message && (
               <div
                 className={`rounded-xl px-4 py-3 text-center text-sm font-medium ${
@@ -229,9 +227,7 @@ export default function ContactSection() {
                 {status.message}
               </div>
             )}
-
           </form>
-
         </div>
 
       </div>

@@ -1,82 +1,47 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
+// components/ServiceSection.tsx
+import ServiceCard from "./ServiceCard";
 import SectionHeading from "./SectionHeading";
 
-interface Service {
-  _id: string;
+interface ServiceItem {
+  _id?: string;
+  id?: string;
   title: string;
-  description: string;
-  mediaUrl: string; 
-  section: string;
+  shortDescription: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  whatsappMessage: string;
+  category: string;
 }
 
-export default function ServiceSection() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
+interface ServiceSectionProps {
+  services: ServiceItem[];
+}
 
-  // 🚀 హెడ్డింగ్ కోసం ఉన్న పాత useEffect మరియు headerData స్టేట్ ని తీసేశాము!
-
-  // సర్వీస్ కార్డ్స్ డేటా తెచ్చే useEffect
-  useEffect(() => {
-    const fetchServices = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-      try {
-        const res = await fetch(`${apiUrl}/content/services`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.success && Array.isArray(data.data)) {
-            const servicesOnly = data.data.filter(
-              (item: Service) => item.section === "service"
-            );
-            setServices(servicesOnly);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch services:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchServices();
-  }, []);
-
+export default function ServiceSection({ services }: ServiceSectionProps) {
   return (
-    <section id="services" className="section">
-      <div className="container">
-        
-        {/* 🚀 కేవలం sectionKey పంపితే చాలు, కాంపోనెంట్ దానంతట అదే డేటా తెచ్చుకుంటుంది */}
-        <SectionHeading sectionKey="service" />
+    <section id="services" className="relative bg-[radial-gradient(circle_at_20%_30%,rgba(168,85,247,0.20),transparent_35%),radial-gradient(circle_at_80%_70%,rgba(59,130,246,0.20),transparent_35%)] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.18),transparent_35%)] pointer-events-none" />
 
-        {loading ? (
-          <p className="text-center muted">Loading services...</p>
-        ) : services.length === 0 ? (
-          <p className="text-center muted">No services found in database.</p>
-        ) : (
-          <div className="grid services-grid">
-            {services.map((service, index) => (
-              <article className="card service-card" key={service._id}>
-                <span className="number">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3 className="text-gray-900 mt-2">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
-                <Link 
-                  href={`${service.mediaUrl}`} 
-                  target="_blank"             
-                  rel="noopener noreferrer"   
-                  className="cursor-pointer text-left no-underline"
-                >  
-                  <span className="text-link inline-block mt-4 text-blue-600 font-medium">
-                    Discuss this service →
-                  </span>              
-                </Link>
-              </article>
-            ))}
-          </div>
-        )}
+      <div className="relative mx-auto max-w-7xl px-6 py-12 lg:px-8">
+        
+        {/* 🚀 'services' కీ ఆధారంగా అడ్మిన్ కాన్ఫిగరేషన్స్ ఆటోమేటిక్‌గా లోడ్ అవుతాయి */}
+        <SectionHeading sectionKey="services" />
+
+     {/* Replace your existing <div className="mt-12 grid..."> block with this flex implementation */}
+<div className="mt-12 flex flex-wrap justify-center gap-6">
+  {services && services.map((service, index) => (
+    <div 
+      key={service._id || service.id || index}
+      className="w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] max-w-[380px]"
+    >
+      <ServiceCard 
+        service={service} 
+        index={index} 
+      />
+    </div>
+  ))}
+</div>
+
       </div>
     </section>
   );

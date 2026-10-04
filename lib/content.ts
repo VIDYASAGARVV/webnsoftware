@@ -70,6 +70,7 @@ export interface ServiceItem {
   shortDescription: string;
   imageUrl?: string;
   videoUrl?: string;
+  status?: 'active' | 'inactive';
   whatsappMessage: string;
   category: 'business-web' | 'ecommerce' | 'digital-marketing' | 'ai-videos' | 'reels';
 }
@@ -100,3 +101,22 @@ export async function getServices(): Promise<ServiceItem[]> {
 }
 
 // 3. get about section 
+// app/lib/content.ts లో చివరన యాడ్ చేయండి
+
+export interface AboutData {
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
+export async function getAboutContent(): Promise<AboutData | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/about`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to fetch about content from backend:", error);
+    return null; // బ్యాకెండ్ ఎర్రర్ వస్తే కాంపోనెంట్‌లోని ఫాల్‌బ్యాక్ డేటా ప్లే అవుతుంది
+  }
+}
+

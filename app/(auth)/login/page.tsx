@@ -59,6 +59,25 @@ export default function LoginPage() {
         <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-200">
           Sign In
         </button>
+      <div className="mt-6 border border-slate-800 bg-slate-600 p-4 rounded-xl flex items-start gap-3 text-sm text-slate-300">
+  {/* Info Icon Anchor */}
+  <span className="text-base text-blue-400 mt-0.5">ℹ️</span>
+  
+  <div>
+    <p className="font-semibold text-white tracking-wide mb-1">
+      Demo Administrator Access
+    </p>
+    <div className="space-y-1 opacity-90 font-mono text-xs">
+      <div>
+        <span className="text-slate-400 font-sans">Admin Email:</span> admin@webnsoftware.com
+      </div>
+      <div>
+        <span className="text-slate-400 font-sans">Password:</span> adminpassword123
+      </div>
+    </div>
+  </div>
+</div>
+
       </form>
     </div>
   );
