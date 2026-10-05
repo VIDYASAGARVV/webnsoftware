@@ -25,7 +25,7 @@ export default function AdminDashboard() {
     {
       title: 'Customer Enquiries',
       description: 'View messages sent through contact forms and WhatsApp logs.',
-      link: '/admin/enquiries',
+      link: '/admin/inquiries',
       icon: '📩',
     },
   ];

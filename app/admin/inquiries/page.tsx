@@ -16,6 +16,9 @@ export default function AdminInquiriesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // 🚀 Replaced hardcoded string with dynamic environment routing variable
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
   useEffect(() => {
     const fetchInquiries = async () => {
       try {
@@ -28,8 +31,8 @@ export default function AdminInquiriesPage() {
           return;
         }
 
-        // 2. Query secure backend collection logs
-        const res = await fetch('http://localhost:5000/api/admin/inquiries', {
+        // 2. Query secure backend collection logs dynamically using our variable
+        const res = await fetch(`${apiUrl}/admin/inquiries`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -51,21 +54,24 @@ export default function AdminInquiriesPage() {
     };
 
     fetchInquiries();
-  }, [router]);
+  }, [router, apiUrl]); // Added apiUrl to dependencies for hook compliance
 
   return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
-      <div className="max-w-6xl mx-auto">
-        
+    <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
+      <div className="max-w-6xl mx-auto mb-6">
         <h1 className="text-3xl font-bold tracking-tight text-gray-300">User Inquiries Log</h1>
         <p className="mt-1 text-sm text-gray-500">Monitor and track incoming contact submissions and feedback entries.</p>
       </div>
 
       {/* Global State Notifications */}
-      {error && <p className="text-red-500 bg-red-50 p-3 rounded-md text-sm font-medium">{error}</p>}
+      {error && (
+        <div className="max-w-6xl mx-auto mb-6 p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl text-sm font-medium">
+          ⚠️ {error}
+        </div>
+      )}
 
       {/* Data Table Wrapper Layout */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="max-w-6xl mx-auto bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
           <h2 className="text-md font-semibold text-gray-800">Inbound Messages</h2>
           <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">

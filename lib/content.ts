@@ -43,7 +43,7 @@
 //     {
 //       id: 1,
 //       title: "Business Websites",
-//       shortDescription: "Modern, fast and professional websites designed to build trust and generate customers.",
+//       shortDescription: "Mdern, fast and proofessional websites designed to build trust and generate customers.",
 //       imageUrl: "/images/services/web-development.jpg",  
 //       whatsappMessage: "Hi WebNSoftware, I am interested in Business Website development. Please share the details and pricing.",
 //     },

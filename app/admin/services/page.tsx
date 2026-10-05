@@ -26,13 +26,15 @@ export default function AdminServicesPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // 🚀 ఫైల్ లోపల ఫంక్షన్ల కంటే పైన ఈ వేరియబుల్ ఉందో లేదో చూసుకోండి
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
   // 1. GET ALL SERVICES FROM BACKEND
   const fetchServices = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/services');
+      // 🚀 ہਾਰడ్‌కోడెడ్ మార్చి \${apiUrl} ని కనెక్ట్ చేసాము
+      const res = await fetch(`${apiUrl}/services`);
       const data = await res.json();
-      // ఒకవేళ డేటా అర్రే కాకపోతే ఎంప్టీ అర్రే సెట్ చేస్తుంది
       setServices(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to load services:", err);
@@ -44,17 +46,41 @@ export default function AdminServicesPage() {
     fetchServices();
   }, []);
 
-  // 2. SUBMIT FORM (CREATE OR UPDATE)
+  // 3. DELETE SERVICE
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this service?')) {
+      try {
+        // 🚀 ఇక్కడ కూడా \${apiUrl} ని కనెక్ట్ చేసాము
+        const res = await fetch(`${apiUrl}/services/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          fetchServices();
+        } else {
+          const data = await res.json();
+          setError(data.error || "Failed to delete item.");
+        }
+      } catch (err) {
+        console.error("Error deleting service:", err);
+        setError("Connection error while deleting.");
+      }
+    }
+  };
+
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+   // 2. SUBMIT FORM (CREATE OR UPDATE)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
+    // 🚀 ఇక్కడ \${apiUrl} వచ్చేలా డైనమిక్ గా మార్చాము
     const url = isEditing 
-      ? `http://localhost:5000/api/services/${currentId}` 
-      : 'http://localhost:5000/api/services';
+      ? `${apiUrl}/services/${currentId}` 
+      : `${apiUrl}/services`;
     const method = isEditing ? 'PUT' : 'POST';
 
-    // కేటగిరీని బట్టి ఇమేజ్ లేదా వీడియో ఫీల్డ్స్ మాత్రమే పంపే సేఫ్ పేలోడ్ లాజిక్
     const isVideoCategory = ['ai-videos', 'reels'].includes(form.category);
     const payload = {
       title: form.title,
@@ -87,23 +113,7 @@ export default function AdminServicesPage() {
     }
   };
 
-  // 3. DELETE SERVICE
-  const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this service?')) {
-      try {
-        const res = await fetch(`http://localhost:5000/api/services/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          fetchServices();
-        } else {
-          const data = await res.json();
-          setError(data.error || "Failed to delete item.");
-        }
-      } catch (err) {
-        console.error("Error deleting service:", err);
-        setError("Connection error while deleting.");
-      }
-    }
-  };
+
 
   // 4. ACTION TRIGGERS (EDIT & RESET)
   const startEdit = (service: ServiceItem) => {

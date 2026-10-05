@@ -5,7 +5,6 @@ import ContactSection from "../components/ContactSection";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AboutSection from "../components/AboutSection";
-import HeroSection from "../components/HeroSection";
 import ServiceSection from "../components/ServiceSection";
 
 export default async function Home() {
@@ -22,7 +21,7 @@ export default async function Home() {
       <main className="min-h-screen bg-slate-950 text-white">
 
         {/* 1. MODULAR HERO SECTION */}
-        <HeroSection heroData={heroData} />
+        {/* <HeroSection heroData={heroData} /> */}
 
         {/* 2. MODULAR SERVICE SECTION */}
         <ServiceSection services={services} />
