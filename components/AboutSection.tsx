@@ -75,7 +75,7 @@ export default function AboutSection({ aboutData: propAboutData }: AboutSectionP
   };
 
   return (
-    <section id="about-us" className="relative overflow-hidden bg-slate-950 px-6 py-12 text-white sm:py-12">
+    <section id="about" className="relative overflow-hidden bg-slate-950 px-6 py-12 text-white sm:py-12">
       {/* Background Decorative Layout Glows */}
       <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-[#b6ff00]/10 blur-3xl" />
       <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />

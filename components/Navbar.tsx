@@ -7,12 +7,10 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const menuItems = [
-    { name: "Home", href: "#home" },
-    { name: "Services", href: "#services" },
-    { name: "AI Videos", href: "#ai-videos" },
-    { name: "Reels", href: "#reels" },
-    { name: "Marketing", href: "#marketing" },
-  ];
+    { name: "Home", href: "#service" },
+    { name: "Services", href: "#service" },
+    { name: "About", href: "#about" },
+    { name: "Contact", href: "#contact" },];
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50">

@@ -5,9 +5,9 @@ import Link from 'next/link';
 export default function AdminDashboard() {
   const adminModules = [
     {
-      title: 'Hero Section',
+      title: 'Heading Section',
       description: 'Manage main landing page heading and primary text.',
-      link: '/admin/hero',
+      link: '/admin/headings',
       icon: '✨',
     },
     {

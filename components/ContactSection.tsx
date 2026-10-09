@@ -110,7 +110,7 @@ export default function ContactSection() {
 
   return (
     <section
-      id="contact-us"
+      id="contact"
       className="relative overflow-hidden bg-[#b6ff00] px-6 py-24 text-slate-950"
     >
       {/* Background Decorative Glow */}
@@ -156,7 +156,11 @@ export default function ContactSection() {
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-700">Phone</p>
-                <p className="font-semibold">+91 7569100563</p>
+                <p className="font-semibold">
+                  <a href="tel:+917569100563" >
+                    +917569100563
+                  </a>
+                </p>
               </div>
             </div>
           </div>
