@@ -49,7 +49,7 @@ export default function ServiceCard({
 
 
   // ----------------------------------------
-  // MOUSE ENTER
+  // MOUSE ENTER (Desktop)
   // PLAY + UNMUTE
   // ----------------------------------------
   const handleMouseEnter = () => {
@@ -60,18 +60,17 @@ export default function ServiceCard({
     video.play()
       .then(() => {
         video.muted = false;
-
         setIsPlaying(true);
         setIsMuted(false);
       })
       .catch(() => {
-        // Browser may block sound until user interaction
+        // Sound blocked until user interaction
       });
   };
 
 
   // ----------------------------------------
-  // MOUSE LEAVE
+  // MOUSE LEAVE (Desktop)
   // MUTE BUT KEEP PLAYING
   // ----------------------------------------
   const handleMouseLeave = () => {
@@ -80,12 +79,8 @@ export default function ServiceCard({
     const video = videoRef.current;
 
     video.muted = true;
-
     setIsMuted(true);
 
-    // IMPORTANT:
-    // Don't pause video.
-    // It should continue playing automatically.
     if (video.paused) {
       video.play().catch(() => {});
       setIsPlaying(true);
@@ -94,21 +89,42 @@ export default function ServiceCard({
 
 
   // ----------------------------------------
-  // MOBILE TAP
-  // MUTE / UNMUTE
+  // TOGGLE PLAY / PAUSE (Center Button & Card Click)
   // ----------------------------------------
-  const handleMobileToggle = () => {
+  const togglePlayPause = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!service.videoUrl || !videoRef.current) return;
 
     const video = videoRef.current;
 
+    if (video.paused) {
+      video.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {});
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  // ----------------------------------------
+  // TOGGLE MUTE / UNMUTE (Sound Button Click)
+  // ----------------------------------------
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!service.videoUrl || !videoRef.current) return;
+
+    const video = videoRef.current;
+
+    // If video is paused when unmuting, resume play
     if (video.paused) {
       video.play().catch(() => {});
       setIsPlaying(true);
     }
 
     video.muted = !video.muted;
-
     setIsMuted(video.muted);
   };
 
@@ -124,7 +140,7 @@ export default function ServiceCard({
 
         <div
           className="absolute inset-0 h-full w-full"
-          onClick={handleMobileToggle}
+          onClick={togglePlayPause}
         >
 
           <video
@@ -138,17 +154,16 @@ export default function ServiceCard({
             className="h-full w-full object-cover transition duration-700"
           />
 
-          {/* Mobile Play Button */}
-          {!isPlaying && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20 md:hidden pointer-events-none">
-
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-xl">
-
+          {/* 🚀 CENTER PLAY / PAUSE OVERLAY BUTTON */}
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+            {!isPlaying ? (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl transition duration-300 scale-100">
+                {/* Play Icon */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-6 h-6 ml-1"
+                  className="w-7 h-7 ml-1"
                 >
                   <path
                     fillRule="evenodd"
@@ -156,52 +171,65 @@ export default function ServiceCard({
                     clipRule="evenodd"
                   />
                 </svg>
-
               </div>
-
-            </div>
-          )}
-
-          {/* Sound indicator */}
-          {isPlaying && (
-            <div className="absolute right-5 bottom-5 z-20 hidden md:flex items-center justify-center">
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white">
-
-                {isMuted ? (
-                  /* Muted Icon */
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="h-5 w-5"
-                  >
-                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                    <path d="M23 9l-6 6" />
-                    <path d="M17 9l6 6" />
-                  </svg>
-                ) : (
-                  /* Sound Icon */
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="h-5 w-5"
-                  >
-                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                    <path d="M19.07 4.93a10 10 0 010 14.14" />
-                    <path d="M15.54 8.46a5 5 0 010 7.07" />
-                  </svg>
-                )}
-
+            ) : (
+              /* Pause icon visible on hover during playing state */
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-2xl opacity-0 transition duration-300 group-hover:opacity-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-7 h-7"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M6.75 5.25a.75.75 0 0 1 .75.75v12a.75.75 0 0 1-1.5 0v-12a.75.75 0 0 1 .75-.75Zm10.5 0a.75.75 0 0 1 .75.75v12a.75.75 0 0 1-1.5 0v-12a.75.75 0 0 1 .75-.75Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
+            )}
+          </div>
 
-            </div>
-          )}
+          {/* 🚀 MOBILE & DESKTOP MUTE / UNMUTE TRIGGER BUTTON */}
+          <div className="absolute right-4 bottom-5 z-30 flex items-center justify-center">
+            <button
+              onClick={toggleMute}
+              type="button"
+              aria-label={isMuted ? "Unmute video" : "Mute video"}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/30 text-white shadow-lg transition active:scale-95 hover:bg-black/80"
+            >
+              {isMuted ? (
+                /* Muted Icon */
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="h-5 w-5 text-red-400"
+                >
+                  <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                </svg>
+              ) : (
+                /* Unmuted / Sound Icon */
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="h-5 w-5 text-green-400"
+                >
+                  <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                  <path d="M19.07 4.93a10 10 0 010 14.14" />
+                  <path d="M15.54 8.46a5 5 0 010 7.07" />
+                </svg>
+              )}
+            </button>
+          </div>
 
         </div>
 
@@ -217,23 +245,23 @@ export default function ServiceCard({
 
 
       {/* Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10 pointer-events-none z-10" />
 
 
       {/* Category */}
-      <div className="absolute right-5 top-5 z-10 rounded-full bg-black/40 border border-blue-400/30 px-2 py-1 text-sm font-semibold text-blue-300 backdrop-blur-md uppercase tracking-wider">
+      <div className="absolute right-5 top-5 z-20 rounded-full bg-black/40 border border-blue-400/30 px-2 py-1 text-sm font-semibold text-blue-300 backdrop-blur-md uppercase tracking-wider">
         {service.category?.replace('-', ' ')}
       </div>
 
 
       {/* Number */}
-      <div className="absolute left-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/40 text-sm font-bold text-white backdrop-blur-md">
+      <div className="absolute left-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/40 text-sm font-bold text-white backdrop-blur-md">
         {String(index + 1).padStart(2, '0')}
       </div>
 
 
       {/* Content */}
-      <div className="absolute inset-x-0 bottom-0 z-10 p-6 pointer-events-auto">
+      <div className="absolute inset-x-0 bottom-0 z-20 p-6 pointer-events-auto">
 
         <h3 className="text-2xl font-bold text-white">
           {service.title}
@@ -249,6 +277,7 @@ export default function ServiceCard({
             href={getWhatsAppUrl(service.whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             className="inline-flex items-center gap-2.5 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition duration-300 hover:scale-105 hover:bg-green-400"
           >
 
